@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="39.0" prefWidth="697.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <TableView prefHeight="61.0" prefWidth="697.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="38.0" text="mat" />
+          <TableColumn prefWidth="112.0" text="nom" />
+            <TableColumn prefWidth="186.0" text="email" />
+            <TableColumn prefWidth="75.0" text="salaire" />
+            <TableColumn prefWidth="142.0" text="dateEmbauche" />
+            <TableColumn minWidth="0.0" prefWidth="142.0" text="Nombre d'heure sup" />
+        </columns>
+      </TableView>
+   </top>
+</BorderPane>

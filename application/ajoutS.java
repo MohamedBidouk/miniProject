@@ -23,18 +23,8 @@ public class ajoutS {
 			String nom=br.readLine();  
 			System.out.println("enter email:");  
 			String email=br.readLine();  
-			System.out.println("enter category:");
-			String category = "";
-			do {
-				String c=br.readLine();
-				if(c!="employe"&&c!="vendeur") {
-					System.out.println("enter valide category (employe || vendeur):");
-				}
-				else {
-					category=br.readLine();
-				}
-			}while(category==null);
-			  
+			System.out.println("enter category:");  
+			String category=br.readLine();  
 			System.out.println("enter salaireFinal:");  
 			double salaryFinal=Double.parseDouble(br.readLine());
 			

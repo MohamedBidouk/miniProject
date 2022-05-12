@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-public class deleteS {
+public class deleteE {
 
 	public static void main(String[] args) {
 		try{  
@@ -14,7 +14,7 @@ public class deleteS {
 			Connection con=DriverManager.getConnection(  
 					"jdbc:mysql://localhost:3307/miniprojet","root","");  
 			
-			PreparedStatement ps=con.prepareStatement("delete from entreprise where matriculeE=?");  
+			PreparedStatement ps=con.prepareStatement("delete from employe where matricule=?");  
 			
 			BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 			
@@ -25,9 +25,9 @@ public class deleteS {
 			
 			
 			int i=ps.executeUpdate();  
-			System.out.println(i+" emaploye from entreprise deleted");  
+			System.out.println(i+" emaploye deleted");  
 			  
-			con.close();
+			con.close();  
 		}catch(Exception e){ System.out.println(e);} 
 
 	}
