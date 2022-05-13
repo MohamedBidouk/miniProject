@@ -18,10 +18,10 @@
                </opaqueInsets>
             </Button>
             <Button fx:id="detailBtn" layoutX="249.0" layoutY="15.0" mnemonicParsing="false" text="lister per ancienette" />
-            <Button fx:id="modifyBtn" layoutX="390.0" layoutY="15.0" mnemonicParsing="false" text="lister per plus faible" />
+            <Button fx:id="switch2" layoutX="390.0" layoutY="15.0" mnemonicParsing="false" onAction="#switchToVueDetailScene" text="lister per plus faible" />
             <TextField layoutX="528.0" layoutY="15.0" prefHeight="25.0" prefWidth="74.0" />
             <TextField layoutX="628.0" layoutY="15.0" prefHeight="25.0" prefWidth="66.0" />
-            <Button layoutX="529.0" layoutY="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="163.0" text="lister between two salary" />
+            <Button fx:id="switch1" layoutX="529.0" layoutY="50.0" mnemonicParsing="false" onAction="#switchToUpdateScene" prefHeight="25.0" prefWidth="163.0" text="lister between two salary" />
          </children>
          <BorderPane.margin>
             <Insets left="15.0" top="15.0" />

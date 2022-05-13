@@ -8,13 +8,13 @@ public class employes extends Salaire{
 		HSupp = hSupp;
 		PHSupp = pHSupp;
 	}
-	private double getHSupp() {
+	double getHSupp() {
 		return HSupp;
 	}
 	public void setHSupp(double hSupp) {
 		HSupp = hSupp;
 	}
-	private double getPHSupp() {
+	double getPHSupp() {
 		return PHSupp;
 	}
 	public void setPHSupp(double pHSupp) {
@@ -28,11 +28,11 @@ public class employes extends Salaire{
 				+ ", toString()=" + super.toString() + ", getRecrutement()=" + getRecrutement() + ", getSalaireF()="
 				+ getSalaireF() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
 	}
-	public double calculSalaireFixe() {
+	public void setSalaireF () {
 		if (this.getRecrutement()<=2005) {
-			return 400;
+			this.salaireF = 400 + this.PHSupp;
 		}else {
-			return 280;
+			this.salaireF = 280 + this.PHSupp;
 		}
 	}
 }
