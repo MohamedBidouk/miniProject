@@ -17,7 +17,7 @@
                   <Insets />
                </opaqueInsets>
             </Button>
-            <Button fx:id="detailBtn" layoutX="249.0" layoutY="15.0" mnemonicParsing="false" text="lister per ancienette" />
+            <Button fx:id="detailBtn" layoutX="249.0" layoutY="15.0" mnemonicParsing="false" onAction="#ajoutSalary" text="lister per ancienette" />
             <Button fx:id="switch2" layoutX="390.0" layoutY="15.0" mnemonicParsing="false" onAction="#switchToVueDetailScene" text="lister per plus faible" />
             <TextField layoutX="528.0" layoutY="15.0" prefHeight="25.0" prefWidth="74.0" />
             <TextField layoutX="628.0" layoutY="15.0" prefHeight="25.0" prefWidth="66.0" />
@@ -40,9 +40,9 @@
             <TableColumn fx:id="categoryCol" prefWidth="103.0" text="category" />
             <TableColumn prefWidth="66.0" text="Gestion">
                <columns>
-                  <TableColumn prefWidth="75.0" text="see detail" />
-                  <TableColumn prefWidth="68.0" text="modify" />
-                  <TableColumn prefWidth="78.0" text="delete" />
+                  <TableColumn fx:id="seeDetailButtonCol" prefWidth="75.0" text="see detail" />
+                  <TableColumn fx:id="modifyButtonCol" prefWidth="68.0" text="modify" />
+                  <TableColumn fx:id="deleteButtonCol" prefWidth="78.0" text="delete" />
                </columns>
             </TableColumn>
         </columns>

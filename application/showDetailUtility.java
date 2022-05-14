@@ -1,0 +1,30 @@
+package application;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class showDetailUtility {
+	private List<employes> sal;
+	public showDetailUtility() {
+		sal = new ArrayList<employes>();
+		try{  
+			Class.forName("com.mysql.jdbc.Driver");  
+			Connection con=DriverManager.getConnection(  
+					"jdbc:mysql://localhost:3307/miniprojet","root","");  
+			
+			PreparedStatement ps=con.prepareStatement("select * from entreprise where matriculeE=?");
+			ps.setInt(1, 34);
+			ResultSet rs=ps.executeQuery();
+			
+			while(rs.next())  
+				sal.add(new employes (rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(4)));	
+			con.close();  
+		}catch(Exception e){ System.out.println(e);} 
+	}
+	
+	public List<employes> getImportlist() { return sal;}
+}
