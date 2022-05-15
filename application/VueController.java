@@ -3,37 +3,42 @@ package application;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class VueController implements Initializable{
 	private dataBaseUtility data;
-	private int var;
+	private Alert a = new Alert(AlertType.NONE);
+	private Alert confirmation = new Alert(AlertType.NONE); 
 		
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {		
@@ -44,7 +49,43 @@ public class VueController implements Initializable{
 		 dateCol.setCellValueFactory(new PropertyValueFactory<>("salaireF"));
 		 supCol.setCellValueFactory(new PropertyValueFactory<>("hSupp"));
 		 categoryCol.setCellValueFactory(new PropertyValueFactory<>("pHSupp"));
-		 seeDetailButtonCol.addEventHandler(null, null);
+		 seeDetailButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Detail", (employes e) -> {
+			    
+			 table.getItems().remove(e);
+			    
+			    return e;
+			}));    
+		 
+		 modifyButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Modify", (employes e) -> {
+			    table.getItems().remove(e);
+			    
+			    return e;
+			}));    
+		 
+		 deleteButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Remove", (employes e) -> {
+			 a.setAlertType(AlertType.CONFIRMATION);
+             a.setContentText("are yu sure to delete "+ e.getNom()+" "+"de matricule "+e.getMatricule());
+             Optional<ButtonType> option = a.showAndWait();
+             confirmation.setAlertType(AlertType.WARNING);
+             if (option.get() == null) {
+            	
+              } else if (option.get() == ButtonType.OK) {
+            	  try {
+					System.out.println("Ill delete");
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+              } else if (option.get() == ButtonType.CANCEL) {
+            	  confirmation.close();
+              } else {
+            	  confirmation.close();
+              }
+           
+			    return e;
+			}));    
+		 
+		 
 		 this.data = new dataBaseUtility(); 
 		 try {
 			importList();
@@ -55,13 +96,6 @@ public class VueController implements Initializable{
 		
 	}
 	
-	public int getSelectedItemMatricule() {
-		return table.getSelectionModel().getSelectedItem().getMatricule();
-	}
-	public void handle(ActionEvent t) throws Throwable {
-		deleteS(getSelectedItemMatricule());
-        
-    }
 	
 	//table
 	@FXML
@@ -90,13 +124,13 @@ public class VueController implements Initializable{
 	 private TableColumn<Salaire, Double> categoryCol;
 	
 	@FXML
-	private TableColumn<Salaire, Void> seeDetailButtonCol;
+	private TableColumn seeDetailButtonCol;
 	
 	@FXML
-	private TableColumn<Salaire, Void> modifyButtonCol;
+	private TableColumn modifyButtonCol;
 	
 	@FXML
-	private TableColumn<Salaire, Void> deleteButtonCol;
+	private TableColumn deleteButtonCol;
 	
 	//button
 	@FXML 
@@ -136,7 +170,6 @@ public class VueController implements Initializable{
 		}
 	 
 		public void switchToVueDetailScene(ActionEvent event) throws IOException {
-			
 			Parent root = FXMLLoader.load(getClass().getResource("VueDetailEmploye.fxml"));
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			scene = new Scene(root);
@@ -213,7 +246,7 @@ public class VueController implements Initializable{
 					ps.setString(8,category);
 				}
 				int i=ps.executeUpdate();  
-				System.out.println(i+" emaploye added to entreprise");
+				System.out.println(i+" employe added to entreprise");
 				
 				con.close();  
 				
@@ -222,8 +255,7 @@ public class VueController implements Initializable{
 		
 		//delete employe
 		@FXML
-		public void deleteS(int var) throws Throwable{
-			Integer a = table.getSelectionModel().getSelectedItem().getMatricule();
+		public void deleteS(employes selected) throws Throwable{
 			try{  
 				Class.forName("com.mysql.jdbc.Driver");  
 				Connection con=DriverManager.getConnection(  
@@ -231,18 +263,15 @@ public class VueController implements Initializable{
 				
 				PreparedStatement ps=con.prepareStatement("delete from entreprise where matriculeE=?");  
 				
-				ps.setInt(1, var);
+				ps.setInt(1, selected.getMatricule());
 				
 				int i=ps.executeUpdate();  
-				System.out.println(i+" emaploye from entreprise deleted");table.refresh();  
+				System.out.println(i+" emaploye from entreprise deleted");
 				  
 				con.close();
+				importList();
 			}catch(Exception e){ System.out.println(e);} 
 		}
 		
-		public int getSelected() {
-			return table.getSelectionModel().getSelectedItem().getMatricule();
-		}
 		
-
 }
