@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class updateUtility {
 	private employes employe;
-	public updateUtility() {
+	public updateUtility(int matricule) {
 		employe = new employes(12, "dsf", "dsf", 234.5, 234.5, 34, 234);
 		try{  
 			Class.forName("com.mysql.jdbc.Driver");  
@@ -16,7 +16,7 @@ public class updateUtility {
 					"jdbc:mysql://localhost:3307/miniprojet","root","");  
 			
 			PreparedStatement ps=con.prepareStatement("select * from entreprise where matriculeE=?");
-			ps.setInt(1, 34);
+			ps.setInt(1, matricule);
 			ResultSet rs=ps.executeQuery();
 			
 			while(rs.next()) {  

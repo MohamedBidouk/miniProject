@@ -99,7 +99,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Button>
-            <Button fx:id="confirmBtn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Confirmer">
+            <Button fx:id="confirmBtn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateMethod" text="Confirmer">
                <HBox.margin>
                   <Insets left="170.0" top="13.0" />
                </HBox.margin>

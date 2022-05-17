@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +33,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -50,15 +52,13 @@ public class VueController implements Initializable{
 		 supCol.setCellValueFactory(new PropertyValueFactory<>("hSupp"));
 		 categoryCol.setCellValueFactory(new PropertyValueFactory<>("pHSupp"));
 		 seeDetailButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Detail", (employes e) -> {
-			    
-			 table.getItems().remove(e);
-			    
+			 	loadDetail(e);
 			    return e;
 			}));    
 		 
 		 modifyButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Modify", (employes e) -> {
-			    table.getItems().remove(e);
-			    
+			 loadDetailForUpdate(e);
+			 
 			    return e;
 			}));    
 		 
@@ -67,11 +67,9 @@ public class VueController implements Initializable{
              a.setContentText("are yu sure to delete "+ e.getNom()+" "+"de matricule "+e.getMatricule());
              Optional<ButtonType> option = a.showAndWait();
              confirmation.setAlertType(AlertType.WARNING);
-             if (option.get() == null) {
-            	
-              } else if (option.get() == ButtonType.OK) {
+             if (option.get() == ButtonType.OK) {
             	  try {
-					System.out.println("Ill delete");
+					deleteS(e);
 				} catch (Throwable e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -82,6 +80,8 @@ public class VueController implements Initializable{
             	  confirmation.close();
               }
            
+             
+             
 			    return e;
 			}));    
 		 
@@ -94,8 +94,66 @@ public class VueController implements Initializable{
 			e.printStackTrace();
 		}
 		
+	}	
+	public void loadDetail(employes e) {
+	 	try {
+	 		FXMLLoader fxmlLoader = new FXMLLoader();
+		 	fxmlLoader.setLocation(getClass().getResource("VueDetailEmploye.fxml"));
+			fxmlLoader.load();
+			vueDetailController detailControl = (vueDetailController) fxmlLoader.getController();System.out.println("num :"+ detailControl.num +"mat = "+e.getMatricule());
+	 		detailControl.num= e.getMatricule();System.out.println("num :"+ detailControl.num +"mat = "+e.getMatricule());
+	 		FXMLLoader Due = new FXMLLoader();
+		 	Due.setLocation(getClass().getResource("VueDetailEmploye.fxml"));
+			Parent hama = Due.load();
+	 		Scene scene = new Scene(hama);
+	        Stage stage = new Stage();
+	        stage.setTitle("New Window");
+	        stage.setScene(scene);
+	        stage.show();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+ 	
 	}
 	
+	public void loadDetailForUpdate(employes e) {
+		try {
+	 		FXMLLoader fxmlLoader = new FXMLLoader();
+		 	fxmlLoader.setLocation(getClass().getResource("UpdateFx.fxml"));
+			fxmlLoader.load();
+			UpdateFxController detailControl = (UpdateFxController) fxmlLoader.getController();
+	 		detailControl.mat= e.getMatricule();
+	 		FXMLLoader Due = new FXMLLoader();
+		 	Due.setLocation(getClass().getResource("UpdateFx.fxml"));
+			Parent hama = Due.load();
+	 		Scene scene = new Scene(hama);
+	        Stage stage = new Stage();
+	        stage.setTitle("Update " + e.getMatricule());
+	        stage.setScene(scene);
+	        stage.show();
+	       
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	public void showD() {
+		Parent vueDetailler;
+		try {
+			vueDetailler = FXMLLoader.load(getClass().getResource("VueDetailEmploye.fxml"));
+			Scene scene = new Scene(vueDetailler);
+	        Stage stage = new Stage();
+	        stage.setTitle("New Window");
+	        stage.setScene(scene);
+	        stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	//table
 	@FXML
@@ -169,6 +227,8 @@ public class VueController implements Initializable{
 			stage.show();
 		}
 	 
+		
+		
 		public void switchToVueDetailScene(ActionEvent event) throws IOException {
 			Parent root = FXMLLoader.load(getClass().getResource("VueDetailEmploye.fxml"));
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -176,6 +236,9 @@ public class VueController implements Initializable{
 			stage.setScene(scene);
 			stage.show();
 		}
+		
+	
+		
 		
 	//database utility
 
@@ -273,5 +336,30 @@ public class VueController implements Initializable{
 			}catch(Exception e){ System.out.println(e);} 
 		}
 		
+		
+		@FXML
+		public void seeDetail(employes employe) {
+			try{  
+				Class.forName("com.mysql.jdbc.Driver");  
+				Connection con=DriverManager.getConnection(  
+						"jdbc:mysql://localhost:3307/miniprojet","root","");  
+				
+				PreparedStatement ps=con.prepareStatement("select * from entreprise where matriculeE=?");
+				ps.setInt(1, employe.getMatricule());
+				ResultSet rs=ps.executeQuery();
+				
+				while(rs.next()) {  
+					employe.setMatricule(rs.getInt(1));
+					employe.setNom(rs.getString(2));
+					employe.setEmail(rs.getString(3));
+					employe.setSalaireF(rs.getDouble(4));
+					employe.setRecrutement(rs.getDouble(5));
+					employe.setHSupp(rs.getDouble(6));
+					employe.setPHSupp(rs.getDouble(7));
+				}
+						
+				con.close();  
+			}catch(Exception e){ System.out.println(e);}
+		}
 		
 }

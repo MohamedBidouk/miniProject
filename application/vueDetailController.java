@@ -10,8 +10,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class vueDetailController implements Initializable{
-	
+public class vueDetailController extends VueController implements Initializable{
+	public static int num ;
+
 	private showDetailUtility data;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -21,14 +22,17 @@ public class vueDetailController implements Initializable{
 		 salaireCol.setCellValueFactory(new PropertyValueFactory<>("recrutement"));
 		 dateCol.setCellValueFactory(new PropertyValueFactory<>("salaireF"));
 		 supCol.setCellValueFactory(new PropertyValueFactory<>("hSupp"));
-		 
-		 this.data = new showDetailUtility(); 
+		 this.data = new showDetailUtility(num); 
 		 try {
 			importList();
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public void importEmp() {
 		
 	}
 	
@@ -63,5 +67,7 @@ public class vueDetailController implements Initializable{
 	
 	@FXML
 	private Button btn;
+	
+	
 
 }

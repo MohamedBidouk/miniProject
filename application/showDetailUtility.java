@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class showDetailUtility {
-	private List<employes> sal;
-	public showDetailUtility() {
+	private ArrayList<employes> sal;
+	public showDetailUtility(int matricule) {
 		sal = new ArrayList<employes>();
 		try{  
 			Class.forName("com.mysql.jdbc.Driver");  
@@ -17,7 +17,7 @@ public class showDetailUtility {
 					"jdbc:mysql://localhost:3307/miniprojet","root","");  
 			
 			PreparedStatement ps=con.prepareStatement("select * from entreprise where matriculeE=?");
-			ps.setInt(1, 34);
+			ps.setInt(1, matricule);
 			ResultSet rs=ps.executeQuery();
 			
 			while(rs.next())  

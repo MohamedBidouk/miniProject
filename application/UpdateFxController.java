@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 public class UpdateFxController implements Initializable{
 		
+	public static int updated ;
 		//table column
 		
 		@FXML 
@@ -48,11 +49,12 @@ public class UpdateFxController implements Initializable{
 		 private Button cancelBtn;
 		
 		updateUtility importedEmploye ;
+		public static int mat ;
 		
 		@Override
 		public void initialize(URL location, ResourceBundle resources) { 
 
-			this.importedEmploye = new updateUtility(); 
+			this.importedEmploye = new updateUtility(mat); 
 			 try {
 				importEmploye();
 			} catch (Throwable e) {
@@ -96,8 +98,14 @@ public class UpdateFxController implements Initializable{
 		}
 		
 		@FXML
+		public void getEntredData() {
+			System.out.println(nom.getText());
+		}
+		
+		@FXML
 		public void updateMethod() {
 			try{  
+				updated= 0;
 				Class.forName("com.mysql.jdbc.Driver");  
 				Connection con=DriverManager.getConnection(  
 						"jdbc:mysql://localhost:3307/miniprojet","root","");  
@@ -106,38 +114,38 @@ public class UpdateFxController implements Initializable{
 				
 				BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 				
-				System.out.println("enter matricule:");  
-				int matricule=Integer.parseInt(br.readLine());
-				System.out.println("enter nom:");  
-				String nom=br.readLine();  
-				System.out.println("enter email:");  
-				String email=br.readLine();  
 				
-				System.out.println("enter dateEmbauche:");  
-				double dateE=Double.parseDouble(br.readLine());
-				System.out.println("enter valeur supplémentaire:");  
-				double sup=Double.parseDouble(br.readLine());
+				int matricule=mat;
+				 
+				String newNom=nom.getText();  
 				
-				double supDT=setP(sup);
-				double salaryFinal=setSalaireFinal(dateE, supDT);
+				String newEmail=email.getText();  
 				
-				System.out.println("enter category:");  
-				String category=br.readLine();  
+				  
+				double NewDateE=Double.parseDouble(date.getText());
+				  
+				double NewSup=Double.parseDouble(sup.getText());
+				
+				double supDT=setP(Double.parseDouble(sup.getText()));
+				double salaryFinal=setSalaireFinal(NewDateE, supDT);
+				
+				  
+				String newCategory=category.getText(); 
 				
 				
 				ps.setInt(8, matricule);
-				ps.setString(1,nom);  
-				ps.setString(2,email);
+				ps.setString(1,newNom);  
+				ps.setString(2,newEmail);
 				ps.setDouble(3, salaryFinal);
-				ps.setDouble(4, dateE);
-				ps.setDouble(5, sup);
+				ps.setDouble(4, NewDateE);
+				ps.setDouble(5, NewSup);
 				ps.setDouble(6, supDT);
-				ps.setString(7,category);
+				ps.setString(7,newCategory);
 				
 				ps.executeUpdate();  
-				System.out.println("emplyoe de metricule "+matricule+" updated on entreprise");  
 				  
 				con.close();
+				
 			}catch(Exception e){ System.out.println(e);} 
 		}
 }
