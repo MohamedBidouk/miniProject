@@ -58,6 +58,14 @@ public class VueController implements Initializable{
 		 
 		 modifyButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Modify", (employes e) -> {
 			 loadDetailForUpdate(e);
+			 try {
+				 FXMLLoader loading = new FXMLLoader();
+				 	loading.setLocation(getClass().getResource("UpdateFx.fxml"));
+					loading.load();
+					UpdateFxController isUpdated = (UpdateFxController) loading.getController();
+					if(isUpdated.updated==true) {table.refresh();}
+
+			 }catch(IOException e3) {System.out.println(e3);}
 			 
 			    return e;
 			}));    
@@ -132,7 +140,6 @@ public class VueController implements Initializable{
 	        stage.setTitle("Update " + e.getMatricule());
 	        stage.setScene(scene);
 	        stage.show();
-	       
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

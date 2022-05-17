@@ -1,8 +1,7 @@
 package application;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,7 +22,7 @@ import javafx.stage.Stage;
 
 public class UpdateFxController implements Initializable{
 		
-	public static int updated ;
+	public static boolean updated = false;
 		//table column
 		
 		@FXML 
@@ -105,15 +104,11 @@ public class UpdateFxController implements Initializable{
 		@FXML
 		public void updateMethod() {
 			try{  
-				updated= 0;
 				Class.forName("com.mysql.jdbc.Driver");  
 				Connection con=DriverManager.getConnection(  
 						"jdbc:mysql://localhost:3307/miniprojet","root","");  
 				
-				PreparedStatement ps=con.prepareStatement("update entreprise set nom=?, email=?, salaire=?, dateEmbauche=?, sup=?, supDT=?, category=? where matriculeE=?");  
-				
-				BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-				
+				PreparedStatement ps=con.prepareStatement("update entreprise set nom=?, email=?, salaire=?, dateEmbauche=?, sup=?, supDT=?, category=? where matriculeE=?");  			
 				
 				int matricule=mat;
 				 
@@ -145,7 +140,7 @@ public class UpdateFxController implements Initializable{
 				ps.executeUpdate();  
 				  
 				con.close();
-				
+				UpdateFxController.updated=true;
 			}catch(Exception e){ System.out.println(e);} 
 		}
 }
