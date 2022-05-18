@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +25,11 @@ import javafx.stage.Stage;
 
 public class UpdateFxController implements Initializable{
 	
-	public static boolean updated = false;
+	public boolean updated = false;
+	
+	public BooleanProperty booleanProperty = new SimpleBooleanProperty(false);
+	
+	
 	
 	
 		//table column
@@ -55,6 +62,8 @@ public class UpdateFxController implements Initializable{
 		@Override
 		public void initialize(URL location, ResourceBundle resources) { 
 
+			
+			
 			this.importedEmploye = new updateUtility(mat); 
 			 try {
 				importEmploye();
@@ -143,9 +152,12 @@ public class UpdateFxController implements Initializable{
 				  
 				con.close();
 				
-				updated=true;
+				this.updated=true;
 			}catch(Exception e){ System.out.println(e);} 
 		}
+		
+
+
 		
 		
 }

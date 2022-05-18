@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.Window;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,8 +68,26 @@ public class VueController implements Initializable{
 			}));    
 		 
 		 modifyButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Modify", (employes e) -> {
-			 loadDetailForUpdate(e);
-			 
+			 try {
+			 		FXMLLoader fxmlLoader = new FXMLLoader();
+				 	fxmlLoader.setLocation(getClass().getResource("UpdateFx.fxml"));
+					fxmlLoader.load();
+					UpdateFxController detailControl = (UpdateFxController) fxmlLoader.getController();
+			 		detailControl.mat= e.getMatricule();
+			 		FXMLLoader Due = new FXMLLoader();
+				 	Due.setLocation(getClass().getResource("UpdateFx.fxml"));
+					Parent hama = Due.load();
+			 		Scene scene = new Scene(hama);
+			        Stage stage = new Stage();
+			        stage.setTitle("Update " + e.getMatricule());
+			        stage.setScene(scene);
+			        stage.show();
+			        
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			
 			    return e;
 			}));    
@@ -174,7 +193,6 @@ public class VueController implements Initializable{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
- 	
 	}
 	
 	public void loadDetailForUpdate(employes e) {
@@ -192,15 +210,15 @@ public class VueController implements Initializable{
 	        stage.setTitle("Update " + e.getMatricule());
 	        stage.setScene(scene);
 	        stage.show();
-	        
-	        
-	        
+	        do {
+				System.out.println(detailControl.updated);
+			} while (detailControl.updated);
+	        if(detailControl.updated)stage.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
-	
+	}	
 	
 	public void showD() {
 		Parent vueDetailler;
