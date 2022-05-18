@@ -12,6 +12,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -51,7 +52,7 @@ public class UpdateFxController implements Initializable{
 		
 		//button
 		@FXML 
-		 private Button confirmBtn;
+		 public Button confirmBtn;
 		
 		@FXML 
 		 private Button cancelBtn;
@@ -62,7 +63,7 @@ public class UpdateFxController implements Initializable{
 		@Override
 		public void initialize(URL location, ResourceBundle resources) { 
 
-			
+			confirmBtn.addEventHandler(ActionEvent.ANY, ia);
 			
 			this.importedEmploye = new updateUtility(mat); 
 			 try {
@@ -73,7 +74,12 @@ public class UpdateFxController implements Initializable{
 			}
 			
 		}
-		
+		EventHandler ia = new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		        System.out.println("click");
+		    }
+		};
 		
 		@FXML
 		 public void importEmploye() throws Throwable{

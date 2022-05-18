@@ -202,14 +202,17 @@ public class VueController implements Initializable{
 			fxmlLoader.load();
 			UpdateFxController detailControl = (UpdateFxController) fxmlLoader.getController();
 	 		detailControl.mat= e.getMatricule();
+	 		detailControl.confirmBtn.addEventHandler(ActionEvent.ANY, ia);
 	 		FXMLLoader Due = new FXMLLoader();
 		 	Due.setLocation(getClass().getResource("UpdateFx.fxml"));
 			Parent hama = Due.load();
 	 		Scene scene = new Scene(hama);
+	 		
 	        Stage stage = new Stage();
 	        stage.setTitle("Update " + e.getMatricule());
 	        stage.setScene(scene);
 	        stage.show();
+	        
 	        do {
 				System.out.println(detailControl.updated);
 			} while (detailControl.updated);
@@ -219,6 +222,13 @@ public class VueController implements Initializable{
 			e1.printStackTrace();
 		}
 	}	
+	
+	EventHandler ia = new EventHandler<ActionEvent>() {
+	    @Override
+	    public void handle(ActionEvent event) {
+	        System.out.println("click");
+	    }
+	};
 	
 	public void showD() {
 		Parent vueDetailler;
