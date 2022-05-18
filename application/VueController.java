@@ -60,7 +60,7 @@ public class VueController implements Initializable{
 		 salaireCol.setCellValueFactory(new PropertyValueFactory<>("recrutement"));
 		 dateCol.setCellValueFactory(new PropertyValueFactory<>("salaireF"));
 		 supCol.setCellValueFactory(new PropertyValueFactory<>("hSupp"));
-		 categoryCol.setCellValueFactory(new PropertyValueFactory<>("pHSupp"));
+		 categoryCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 		 seeDetailButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Detail", (employes e) -> {
 			 	loadDetail(e);
 			    return e;
@@ -192,7 +192,7 @@ public class VueController implements Initializable{
 	        stage.setTitle("Update " + e.getMatricule());
 	        stage.setScene(scene);
 	        stage.show();
-	        UpdateFxController.updated= false;
+	        
 	        
 	        
 		} catch (IOException e1) {

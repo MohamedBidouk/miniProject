@@ -10,7 +10,7 @@ public class mainTry extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("VueDetailEmploye.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("Ajout.fxml"));
 			Scene scene = new Scene(root,952,485);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
