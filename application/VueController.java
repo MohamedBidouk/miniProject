@@ -8,12 +8,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -31,17 +37,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class VueController implements Initializable{
 	private dataBaseUtility data;
 	private Alert a = new Alert(AlertType.NONE);
-	private Alert confirmation = new Alert(AlertType.NONE); 
-		
+	private Alert confirmation = new Alert(AlertType.NONE);
+	private DataBaseGetEmploye employeData;
+	private DataBaseGetVendeur vendeurData;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {		
 		matCol.setCellValueFactory(new PropertyValueFactory<>("matricule"));
@@ -58,22 +68,17 @@ public class VueController implements Initializable{
 		 
 		 modifyButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Modify", (employes e) -> {
 			 loadDetailForUpdate(e);
-			 try {
-				 FXMLLoader loading = new FXMLLoader();
-				 	loading.setLocation(getClass().getResource("UpdateFx.fxml"));
-					loading.load();
-					UpdateFxController isUpdated = (UpdateFxController) loading.getController();
-					if(isUpdated.updated==true) {table.refresh();}
-
-			 }catch(IOException e3) {System.out.println(e3);}
 			 
+			
 			    return e;
 			}));    
 		 
 		 deleteButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Remove", (employes e) -> {
+			 
 			 a.setAlertType(AlertType.CONFIRMATION);
              a.setContentText("are yu sure to delete "+ e.getNom()+" "+"de matricule "+e.getMatricule());
              Optional<ButtonType> option = a.showAndWait();
+             
              confirmation.setAlertType(AlertType.WARNING);
              if (option.get() == ButtonType.OK) {
             	  try {
@@ -87,13 +92,33 @@ public class VueController implements Initializable{
               } else {
             	  confirmation.close();
               }
-           
-             
-             
+
 			    return e;
-			}));    
+			}));  
 		 
+		 empOrVen.selectedProperty().addListener((Observable, oldValue, newValue ) ->
+		 {
+			if(newValue) {
+				empOrVen.setText("Emplyoe");
+				try {
+					importEmployeList();
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} else {
+				try {
+					empOrVen.setText("Vendeur");
+					importVendeurList();
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		 });
 		 
+		 this.vendeurData = new DataBaseGetVendeur();
+		 this.employeData = new DataBaseGetEmploye();
 		 this.data = new dataBaseUtility(); 
 		 try {
 			importList();
@@ -103,19 +128,46 @@ public class VueController implements Initializable{
 		}
 		
 	}	
+	
+	
+	
+	
+	@FXML
+	 public void importList() throws Throwable{
+			table.getItems().addAll(data.getImportlist());
+		}
+	
+	@FXML
+	private ToggleButton empOrVen;
+	
+	@FXML
+	public void importEmployeList() throws Throwable{
+		
+		table.getItems().addAll(employeData.getImportEmployeList());
+		System.out.println(employeData.getImportEmployeList());
+	}
+
+	@FXML
+	public void importVendeurList() throws Throwable{
+		
+		table.getItems().addAll(vendeurData.getImportEmployeList());
+		System.out.println(vendeurData.getImportEmployeList());
+	}
+
+	
 	public void loadDetail(employes e) {
 	 	try {
 	 		FXMLLoader fxmlLoader = new FXMLLoader();
 		 	fxmlLoader.setLocation(getClass().getResource("VueDetailEmploye.fxml"));
 			fxmlLoader.load();
-			vueDetailController detailControl = (vueDetailController) fxmlLoader.getController();System.out.println("num :"+ detailControl.num +"mat = "+e.getMatricule());
-	 		detailControl.num= e.getMatricule();System.out.println("num :"+ detailControl.num +"mat = "+e.getMatricule());
+			vueDetailController detailControl = (vueDetailController) fxmlLoader.getController();
+	 		detailControl.num= e.getMatricule();
 	 		FXMLLoader Due = new FXMLLoader();
 		 	Due.setLocation(getClass().getResource("VueDetailEmploye.fxml"));
 			Parent hama = Due.load();
 	 		Scene scene = new Scene(hama);
 	        Stage stage = new Stage();
-	        stage.setTitle("New Window");
+	        stage.setTitle(e.getNom());
 	        stage.setScene(scene);
 	        stage.show();
 		} catch (IOException e1) {
@@ -140,11 +192,15 @@ public class VueController implements Initializable{
 	        stage.setTitle("Update " + e.getMatricule());
 	        stage.setScene(scene);
 	        stage.show();
+	        UpdateFxController.updated= false;
+	        
+	        
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
+	
 	
 	public void showD() {
 		Parent vueDetailler;
@@ -249,10 +305,7 @@ public class VueController implements Initializable{
 		
 	//database utility
 
-		@FXML
-		 public void importList() throws Throwable{
-				table.getItems().addAll(data.getImportlist());
-			}
+		
 		
 		public double setSalaireFinal (double dateE, double pour) {
 			if (dateE>=2005) {
@@ -369,4 +422,20 @@ public class VueController implements Initializable{
 			}catch(Exception e){ System.out.println(e);}
 		}
 		
+		@FXML
+		public void listerParSalaire() {
+			try{  
+				Class.forName("com.mysql.jdbc.Driver");  
+				Connection con=DriverManager.getConnection(  
+						"jdbc:mysql://localhost:3307/miniprojet","root","");  
+				
+				Statement stmt=con.createStatement();  
+				ResultSet rs=stmt.executeQuery("select * from entreprise order by salaire asc;");
+				System.out.println("matricule"+"  "+"nom"+"  "+"email"+"  "+"Salaire"+"  "+"dateEmbauche"+"  "+"Hsup"+"  "+"SSup"+"  "+"catégorie");
+				while(rs.next())  
+					System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3)+"  "+rs.getDouble(4)+"  "+rs.getDouble(5)
+					+"  "+rs.getDouble(6)+"  "+rs.getString(7)+"  ");  
+				con.close();  
+			}catch(Exception e){ System.out.println(e);}
+		}
 }

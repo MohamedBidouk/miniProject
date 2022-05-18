@@ -22,6 +22,7 @@
             <TextField layoutX="528.0" layoutY="15.0" prefHeight="25.0" prefWidth="74.0" />
             <TextField layoutX="628.0" layoutY="15.0" prefHeight="25.0" prefWidth="66.0" />
             <Button fx:id="switch1" layoutX="529.0" layoutY="50.0" mnemonicParsing="false" onAction="#switchToUpdateScene" prefHeight="25.0" prefWidth="163.0" text="lister between two salary" />
+            <ToggleButton fx:id="empOrVen" layoutX="15.0" layoutY="50.0" mnemonicParsing="false" text="Employe ou Vendeur" />
          </children>
          <BorderPane.margin>
             <Insets left="15.0" top="15.0" />

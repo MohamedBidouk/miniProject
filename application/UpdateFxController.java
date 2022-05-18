@@ -21,8 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class UpdateFxController implements Initializable{
-		
+	
 	public static boolean updated = false;
+	
+	
 		//table column
 		
 		@FXML 
@@ -140,7 +142,10 @@ public class UpdateFxController implements Initializable{
 				ps.executeUpdate();  
 				  
 				con.close();
-				UpdateFxController.updated=true;
+				
+				updated=true;
 			}catch(Exception e){ System.out.println(e);} 
 		}
+		
+		
 }
