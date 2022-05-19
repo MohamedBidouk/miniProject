@@ -25,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -68,26 +69,7 @@ public class VueController implements Initializable{
 			}));    
 		 
 		 modifyButtonCol.setCellFactory(ActionButtonTableCell.<employes>forTableColumn("Modify", (employes e) -> {
-			 try {
-			 		FXMLLoader fxmlLoader = new FXMLLoader();
-				 	fxmlLoader.setLocation(getClass().getResource("UpdateFx.fxml"));
-					fxmlLoader.load();
-					UpdateFxController detailControl = (UpdateFxController) fxmlLoader.getController();
-			 		detailControl.mat= e.getMatricule();
-			 		FXMLLoader Due = new FXMLLoader();
-				 	Due.setLocation(getClass().getResource("UpdateFx.fxml"));
-					Parent hama = Due.load();
-			 		Scene scene = new Scene(hama);
-			        Stage stage = new Stage();
-			        stage.setTitle("Update " + e.getMatricule());
-			        stage.setScene(scene);
-			        stage.show();
-			        
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			
+			 loadDetailForUpdate(e);
 			
 			    return e;
 			}));    
@@ -120,6 +102,9 @@ public class VueController implements Initializable{
 			if(newValue) {
 				empOrVen.setText("Emplyoe");
 				try {
+					for ( int i = 0; i<table.getItems().size(); i++) {
+					    table.getItems().clear();
+					}
 					importEmployeList();
 				} catch (Throwable e1) {
 					// TODO Auto-generated catch block
@@ -127,6 +112,9 @@ public class VueController implements Initializable{
 				}
 			} else {
 				try {
+					for ( int i = 0; i<table.getItems().size(); i++) {
+					    table.getItems().clear();
+					}
 					empOrVen.setText("Vendeur");
 					importVendeurList();
 				} catch (Throwable e1) {
@@ -195,40 +183,50 @@ public class VueController implements Initializable{
 		}
 	}
 	
+	public void closing(Stage stage){		
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation");
+		alert.setHeaderText("You're about to cancel!");
+		alert.setContentText("Do you want to save before exiting?");
+		
+		if (alert.showAndWait().get() != ButtonType.OK){
+			stage.close();
+		} 
+	}
+
+
+	
 	public void loadDetailForUpdate(employes e) {
 		try {
+			//Load clicked employe matricule into the static variable mat
 	 		FXMLLoader fxmlLoader = new FXMLLoader();
 		 	fxmlLoader.setLocation(getClass().getResource("UpdateFx.fxml"));
 			fxmlLoader.load();
 			UpdateFxController detailControl = (UpdateFxController) fxmlLoader.getController();
 	 		detailControl.mat= e.getMatricule();
-	 		detailControl.confirmBtn.addEventHandler(ActionEvent.ANY, ia);
+	 		
+	 		//Start of the second vue
 	 		FXMLLoader Due = new FXMLLoader();
 		 	Due.setLocation(getClass().getResource("UpdateFx.fxml"));
 			Parent hama = Due.load();
 	 		Scene scene = new Scene(hama);
 	 		
 	        Stage stage = new Stage();
+	        
 	        stage.setTitle("Update " + e.getMatricule());
 	        stage.setScene(scene);
 	        stage.show();
 	        
-	        do {
-				System.out.println(detailControl.updated);
-			} while (detailControl.updated);
-	        if(detailControl.updated)stage.close();
+	        stage.setOnCloseRequest(event -> {
+				event.consume();
+				closing(stage);	
+			});
+	      
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}	
-	
-	EventHandler ia = new EventHandler<ActionEvent>() {
-	    @Override
-	    public void handle(ActionEvent event) {
-	        System.out.println("click");
-	    }
-	};
 	
 	public void showD() {
 		Parent vueDetailler;
@@ -237,6 +235,22 @@ public class VueController implements Initializable{
 			Scene scene = new Scene(vueDetailler);
 	        Stage stage = new Stage();
 	        stage.setTitle("New Window");
+	        stage.setScene(scene);
+	        stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void ajouter() {
+		Parent vueDetailler;
+		try {
+			vueDetailler = FXMLLoader.load(getClass().getResource("Ajout.fxml"));
+			Scene scene = new Scene(vueDetailler);
+	        Stage stage = new Stage();
+	        stage.setTitle("Ajouter un nouveau Salarié");
 	        stage.setScene(scene);
 	        stage.show();
 		} catch (IOException e) {

@@ -8,11 +8,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
+
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,15 +18,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class UpdateFxController implements Initializable{
 	
 	public boolean updated = false;
 	
-	public BooleanProperty booleanProperty = new SimpleBooleanProperty(false);
+	@FXML
+	public AnchorPane scenePane;
 	
+	Stage stage1;
+	
+	public void confirmed(ActionEvent event) {
+		stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+		stage.close();
+	}
 	
 	
 	
@@ -51,6 +56,9 @@ public class UpdateFxController implements Initializable{
 		 private TextField category;
 		
 		//button
+		@FXML
+		public ToggleButton confirm;
+		
 		@FXML 
 		 public Button confirmBtn;
 		
@@ -63,7 +71,11 @@ public class UpdateFxController implements Initializable{
 		@Override
 		public void initialize(URL location, ResourceBundle resources) { 
 
-			confirmBtn.addEventHandler(ActionEvent.ANY, ia);
+			
+			confirmBtn.setOnAction((event) -> {
+				updateMethod();
+				confirmed(event);
+			});
 			
 			this.importedEmploye = new updateUtility(mat); 
 			 try {
@@ -74,12 +86,6 @@ public class UpdateFxController implements Initializable{
 			}
 			
 		}
-		EventHandler ia = new EventHandler<ActionEvent>() {
-		    @Override
-		    public void handle(ActionEvent event) {
-		        System.out.println("click");
-		    }
-		};
 		
 		@FXML
 		 public void importEmploye() throws Throwable{
@@ -158,7 +164,7 @@ public class UpdateFxController implements Initializable{
 				  
 				con.close();
 				
-				this.updated=true;
+				
 			}catch(Exception e){ System.out.println(e);} 
 		}
 		

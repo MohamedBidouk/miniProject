@@ -11,7 +11,7 @@
    <top>
       <Group>
          <children>
-            <Button fx:id="ajoutBtn" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#importList" text="ajouterSalarié" BorderPane.alignment="CENTER" />
+            <Button fx:id="ajoutBtn" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#ajouter" text="ajouterSalarié" BorderPane.alignment="CENTER" />
             <Button fx:id="deleteBtn" layoutX="119.0" layoutY="15.0" mnemonicParsing="false" onAction="#importList" text="lister per category">
                <opaqueInsets>
                   <Insets />
