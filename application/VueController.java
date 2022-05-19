@@ -39,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -53,6 +54,9 @@ public class VueController implements Initializable{
 	private Alert confirmation = new Alert(AlertType.NONE);
 	private DataBaseGetEmploye employeData;
 	private DataBaseGetVendeur vendeurData;
+	private DataBaseUtilityParSalaire dataBySalary;
+	private DataBaseUtilityParAnc dataByAnc;
+	private DataBaseUtilityBetween dataBetween;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {		
@@ -124,6 +128,12 @@ public class VueController implements Initializable{
 			}
 		 });
 		 
+		 min.setText("0");
+		 max.setText("9999");
+		 
+		 this.dataBetween = new DataBaseUtilityBetween(Double.parseDouble(min.getText()),Double.parseDouble(max.getText()));
+		 this.dataByAnc = new DataBaseUtilityParAnc();
+		 this.dataBySalary = new DataBaseUtilityParSalaire();
 		 this.vendeurData = new DataBaseGetVendeur();
 		 this.employeData = new DataBaseGetEmploye();
 		 this.data = new dataBaseUtility(); 
@@ -137,12 +147,40 @@ public class VueController implements Initializable{
 	}	
 	
 	
+	@FXML
+	private TextField min;
 	
+	@FXML
+	private TextField max;
 	
 	@FXML
 	 public void importList() throws Throwable{
 			table.getItems().addAll(data.getImportlist());
 		}
+	
+	@FXML 
+	public void importListBetween() throws Throwable{
+		for ( int i = 0; i<table.getItems().size(); i++) {
+		    table.getItems().clear();
+		}
+		table.getItems().addAll(dataBetween.getImportlistBetween(Double.parseDouble(min.getText()),Double.parseDouble(max.getText())));
+	}
+	
+	@FXML 
+	public void importListParSalaire() throws Throwable{
+		for ( int i = 0; i<table.getItems().size(); i++) {
+		    table.getItems().clear();
+		}
+		table.getItems().addAll(dataBySalary.getImportlistParSalaire());
+	}
+	
+	@FXML 
+	public void importListParAnc() throws Throwable{
+		for ( int i = 0; i<table.getItems().size(); i++) {
+		    table.getItems().clear();
+		}
+		table.getItems().addAll(dataByAnc.getImportlistParAnc());
+	}
 	
 	@FXML
 	private ToggleButton empOrVen;
@@ -151,14 +189,12 @@ public class VueController implements Initializable{
 	public void importEmployeList() throws Throwable{
 		
 		table.getItems().addAll(employeData.getImportEmployeList());
-		System.out.println(employeData.getImportEmployeList());
 	}
 
 	@FXML
 	public void importVendeurList() throws Throwable{
 		
 		table.getItems().addAll(vendeurData.getImportEmployeList());
-		System.out.println(vendeurData.getImportEmployeList());
 	}
 
 	
@@ -313,11 +349,11 @@ public class VueController implements Initializable{
 	
 	
 	//switcher between scene
-		@FXML
-		Button switch1;
+	@FXML
+	private Button listerParAncienette;
 		
-		@FXML
-		Button switch2;
+	@FXML
+	private Button listerParSalaire;
 		
 
 		private Stage stage;
